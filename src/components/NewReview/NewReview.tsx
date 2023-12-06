@@ -10,10 +10,14 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { PlusIcon } from "@radix-ui/react-icons";
+import { MovieReviewForm } from "./MovieReviewForm";
+import { useState } from "react";
 
 export const NewReview = () => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
           <PlusIcon className="mr-2 h-4 w-4" /> Add Review
@@ -21,12 +25,12 @@ export const NewReview = () => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you sure absolutely sure?</DialogTitle>
+          <DialogTitle>New Movie Review</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            Add a new movie review for a movie.
           </DialogDescription>
         </DialogHeader>
+        <MovieReviewForm handleClose={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );
