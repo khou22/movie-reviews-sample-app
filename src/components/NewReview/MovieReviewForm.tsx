@@ -7,6 +7,8 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { StarRating } from "../StarRating/StarRating";
+import { Textarea } from "../ui/textarea";
+import { CheckIcon } from "@radix-ui/react-icons";
 
 const generateFormSchema = z.object({
   title: z.string().min(1),
@@ -61,7 +63,7 @@ export const MovieReviewForm: React.FC<MovieReviewFormProps> = ({
         {...register("title", { required: true })}
       />
       {errors.title && (
-        <p className="text-red text-sm">{errors.title.message}</p>
+        <p className="text-red-500 text-sm">{errors.title.message}</p>
       )}
       <Input
         type="text"
@@ -69,37 +71,42 @@ export const MovieReviewForm: React.FC<MovieReviewFormProps> = ({
         {...register("imageURL", { required: true })}
       />
       {errors.imageURL && (
-        <p className="text-red text-sm">{errors.imageURL.message}</p>
-      )}
-      <Input
-        type="text"
-        placeholder="Review"
-        {...register("review", { required: true })}
-      />
-      {errors.review && (
-        <p className="text-red text-sm">{errors.review.message}</p>
+        <p className="text-red-500 text-sm">{errors.imageURL.message}</p>
       )}
       <Controller
         name="rating"
         control={control}
         rules={{ required: true }}
-        render={() => (
+        render={({ field }) => (
           <StarRating
-            value={getValues("rating")}
+            value={field.value}
             onChange={(newValue) => setValue("rating", newValue)}
           />
         )}
       />
       {errors.rating && (
-        <p className="text-red text-sm">{errors.rating.message}</p>
+        <p className="text-red-500 text-sm">{errors.rating.message}</p>
+      )}
+      <Textarea
+        rows={4}
+        placeholder="Review"
+        {...register("review", { required: true })}
+      />
+      {errors.review && (
+        <p className="text-red-500 text-sm">{errors.review.message}</p>
       )}
       <Button type="submit" className="min-w-[200px]" disabled={submitted}>
         {submitted ? " Submitted" : "Submit"}
       </Button>
-      {submitted && (
-        <p className="text-green text-sm">Thank you for your review!</p>
+      {!submitted && (
+        <p className="text-green-500 text-sm text-center leading-loose">
+          <CheckIcon className="w-5 h-5 inline mr-1" />
+          Thank you for your review!
+        </p>
       )}
-      {errors.root && <p className="text-red text-sm">{errors.root.message}</p>}
+      {errors.root && (
+        <p className="text-red-500 text-sm">{errors.root.message}</p>
+      )}
     </form>
   );
 };
