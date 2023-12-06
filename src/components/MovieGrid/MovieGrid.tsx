@@ -2,7 +2,6 @@
 
 import { MovieReview } from "@/models";
 import { useState } from "react";
-import Image from "next/image";
 import { mockMovieReviews } from "@/mock";
 import moment from "moment";
 
