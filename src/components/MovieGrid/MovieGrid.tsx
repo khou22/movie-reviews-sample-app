@@ -31,7 +31,7 @@ export const MovieGrid = () => {
                 <span key={index}>&#9733;</span>
               ))}
             </div>
-            <p className="caption italic">{movieReview.description}</p>
+            <p className="caption italic">{movieReview.review}</p>
           </div>
         </div>
       ))}
