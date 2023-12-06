@@ -14,6 +14,15 @@ export type NewMovieReviewResponse = {
 
 export async function POST(req: NextRequest) {
   const reqBody = (await req.json()) as NewMovieReviewRequest;
+  const movieRecord: MovieReview = {
+    id: crypto.randomUUID(),
+    title: reqBody.title,
+    review: reqBody.review,
+    rating: reqBody.rating,
+    imageUrl: reqBody.image_url,
+    createdAt: new Date(),
+  };
+  console.log(`[movie-review] POST: ${JSON.stringify(movieRecord)}`);
 
-  return new Response("Success", { status: 200 });
+  return new Response(JSON.stringify(movieRecord), { status: 200 });
 }
