@@ -2,6 +2,14 @@ import { MovieReview } from "@/models";
 import { NextRequest } from "next/server";
 import { NewMovieReviewRequest } from "./service";
 
+const uri = process.env.MONGO_DB_URI as string;
+if (!uri) {
+  throw new Error("Missing environment variable MONGO_DB_URI");
+}
+
+const mongoDbId = "movie-reviews-sample";
+const mongoDbCollectionId = "movie-reviews";
+
 export async function POST(req: NextRequest) {
   const reqBody = (await req.json()) as NewMovieReviewRequest;
   const movieRecord: MovieReview = {
