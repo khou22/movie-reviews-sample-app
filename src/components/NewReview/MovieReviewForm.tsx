@@ -11,6 +11,7 @@ import { Textarea } from "../ui/textarea";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { Label } from "../ui/label";
 import { NewMovieReviewRequest } from "@/app/api/movie-review/service";
+import { cn } from "@/utils/shadcn";
 
 const generateFormSchema = z.object({
   title: z.string().min(1),
@@ -71,7 +72,7 @@ export const MovieReviewForm: React.FC<MovieReviewFormProps> = ({
     } catch (e) {
       console.error(e);
       if (e instanceof Error) {
-        setError("root", e);
+        setError("root", { message: e.message });
       }
     } finally {
       setIsSubmitting(false);
@@ -136,9 +137,14 @@ export const MovieReviewForm: React.FC<MovieReviewFormProps> = ({
           Thank you for your review!
         </p>
       )}
-      {errors.root && (
-        <p className="text-red-500 text-sm">{errors.root.message}</p>
-      )}
+      <p
+        className={cn(
+          "text-red-500 text-sm",
+          errors.root ? "opacity-100" : "opacity-0"
+        )}
+      >
+        {errors.root?.message || "none"}
+      </p>
     </form>
   );
 };
