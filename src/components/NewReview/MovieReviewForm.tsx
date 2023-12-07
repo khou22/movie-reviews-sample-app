@@ -9,8 +9,8 @@ import { useState } from "react";
 import { StarRating } from "../StarRating/StarRating";
 import { Textarea } from "../ui/textarea";
 import { CheckIcon } from "@radix-ui/react-icons";
-import { NewMovieReviewRequest } from "@/app/api/movie-review/route";
 import { Label } from "../ui/label";
+import { NewMovieReviewRequest } from "@/app/api/movie-review/service";
 
 const generateFormSchema = z.object({
   title: z.string().min(1),
