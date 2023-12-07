@@ -42,7 +42,7 @@ export const MovieReviewForm: React.FC<MovieReviewFormProps> = ({
     defaultValues: {
       title: "Interstellar",
       imageURL:
-        "https://en.wikipedia.org/wiki/File:Interstellar_film_poster.jpg",
+        "https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg",
       review: "",
       rating: 0,
     },

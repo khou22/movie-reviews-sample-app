@@ -13,4 +13,4 @@ export const mongoClient = new MongoClient(uri, {
 });
 
 export const movieReviewsDbName = "movie-reviews-sample";
-export const movieReviewsConnectionId = "movie-reviews";
+export const movieReviewsCollectionId = "movie-reviews";

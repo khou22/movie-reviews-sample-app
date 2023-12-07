@@ -8,6 +8,7 @@ import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
 import { Alert } from "../ui/alert";
 import { GetMoviesResponse } from "@/app/api/movie-review/route";
+import { Card } from "../ui/card";
 
 export const MovieGrid = () => {
   const [movieReviews, setMovieReviews] = useState<MovieReview[]>([]);
@@ -66,13 +67,17 @@ export const MovieGrid = () => {
 
       {error && <Alert variant="destructive">{error.message}</Alert>}
 
-      {isLoading && <p>Loading...</p>}
+      {isLoading && <p className="caption text-center my-16">Loading...</p>}
 
-      <div className="grid grid-cols-1 my-2 gap-8">
+      {!isLoading && movieReviews.length === 0 && (
+        <p className="text-center my-16">No movie reviews found.</p>
+      )}
+
+      <div className="grid grid-cols-2 my-6 gap-8">
         {movieReviews.map((movieReview) => (
-          <div
+          <Card
             key={movieReview.id}
-            className="w-full h-full flex flex-row justify-between items-center bg-slate-800 rounded px-6 py-4 space-x-6 shadow"
+            className="w-full h-full flex flex-row justify-start items-center rounded px-6 py-4 space-x-6 shadow"
           >
             <img
               className="aspect-[2/3] h-52"
@@ -92,7 +97,7 @@ export const MovieGrid = () => {
               </div>
               <p className="caption italic">{movieReview.review}</p>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
     </div>

@@ -30,7 +30,12 @@ export const NewReview = () => {
             Add a new movie review for a movie.
           </DialogDescription>
         </DialogHeader>
-        <MovieReviewForm handleClose={() => setOpen(false)} />
+        <MovieReviewForm
+          handleClose={() => {
+            setOpen(false);
+            window.location.reload();
+          }}
+        />
       </DialogContent>
     </Dialog>
   );
