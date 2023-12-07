@@ -7,6 +7,7 @@ import moment from "moment";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
 import { Alert } from "../ui/alert";
+import { GetMoviesResponse } from "@/app/api/movie-review/route";
 
 export const MovieGrid = () => {
   const [movieReviews, setMovieReviews] = useState<MovieReview[]>([]);
@@ -25,11 +26,13 @@ export const MovieGrid = () => {
           return;
         }
 
-        const data = await fetch("/api/movie-review")
-          .then((res) => res.json())
-          .then((data) => data as MovieReview[]);
+        const response = await fetch("/api/movie-review");
+        if (!response.ok) {
+          throw new Error(await response.text());
+        }
+        const data = (await response.json()) as GetMoviesResponse;
         if (!cancelled) {
-          setMovieReviews(data);
+          setMovieReviews(data.reviews);
         }
       } catch (e) {
         if (!cancelled && e instanceof Error) {
