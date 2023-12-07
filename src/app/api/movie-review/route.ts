@@ -1,22 +1,22 @@
 import { MovieReview } from "@/models";
-import {
-  mongoClient,
-  movieReviewsCollectionId,
-  movieReviewsDbName,
-} from "@/utils/mongodb";
 import { NextRequest } from "next/server";
+import { NewMovieReviewRequest } from "./service";
+import { MongoClient } from "mongodb";
 
-export type NewMovieReviewRequest = {
-  title: string;
-  review: string;
-  rating: number;
-  image_url: string;
-};
+const uri = process.env.MONGO_DB_URI as string;
+if (!uri) {
+  throw new Error("Missing environment variable MONGO_DB_URI");
+}
 
-export type NewMovieReviewResponse = {
-  review: MovieReview;
-};
+const mongoDbId = "movie-reviews-sample";
+const mongoDbCollectionId = "movie-reviews";
 
+/**
+ * Inserts a new movie review into the MongoDB database.
+ *
+ * @param {NextRequest} req - The incoming request object.
+ * @return {Promise<Response>} - A promise that resolves to the server response.
+ */
 export async function POST(req: NextRequest) {
   const reqBody = (await req.json()) as NewMovieReviewRequest;
   const movieRecord: MovieReview = {
@@ -28,23 +28,22 @@ export async function POST(req: NextRequest) {
     createdAt: new Date(),
   };
 
+  const client = new MongoClient(uri);
+
+  // Connect to MongoDB and insert a new document.
   try {
-    await mongoClient.connect();
-
-    // Send a ping to confirm a successful connection
-    await mongoClient.db("admin").command({ ping: 1 });
-
-    const db = mongoClient.db(movieReviewsDbName);
-    const collection = db.collection(movieReviewsCollectionId);
+    await client.connect();
+    const database = client.db(mongoDbId);
+    const collection = database.collection(mongoDbCollectionId);
     await collection.insertOne(movieRecord);
-
     return new Response(JSON.stringify(movieRecord), { status: 200 });
-  } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify(error), { status: 500 });
+  } catch (e) {
+    console.error(e);
+    if (e instanceof Error) {
+      return new Response(e.message, { status: 500 });
+    }
   } finally {
-    // Ensures that the client will close when you finish/error
-    await mongoClient.close();
+    client.close();
   }
 }
 
@@ -53,37 +52,36 @@ export type GetMoviesResponse = {
 };
 
 export async function GET(_req: NextRequest) {
+  const client = new MongoClient(uri);
+
   try {
-    await mongoClient.connect();
+    // Read all movie reviews from my collection.
+    await client.connect();
+    const database = client.db(mongoDbId);
+    const collection = database.collection(mongoDbCollectionId);
+    const movieRecords = await collection.find({}).toArray();
 
-    // Send a ping to confirm a successful connection
-    await mongoClient.db("admin").command({ ping: 1 });
-
-    const db = mongoClient.db(movieReviewsDbName);
-    const collection = db.collection(movieReviewsCollectionId);
-
-    const documents = await collection.find({}).toArray();
-    const reviews = documents.map((doc) => {
+    const movies = movieRecords.map((movieRecord) => {
       return {
-        id: doc.id,
-        title: doc.title,
-        review: doc.review,
-        rating: doc.rating,
-        imageUrl: doc.imageUrl,
-        createdAt: doc.createdAt,
+        id: movieRecord.id,
+        title: movieRecord.title,
+        review: movieRecord.review,
+        rating: movieRecord.rating,
+        imageUrl: movieRecord.imageUrl,
+        createdAt: movieRecord.createdAt,
       };
     });
-
     const response: GetMoviesResponse = {
-      reviews,
+      reviews: movies,
     };
 
     return new Response(JSON.stringify(response), { status: 200 });
-  } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify(error), { status: 500 });
+  } catch (e) {
+    console.error(e);
+    if (e instanceof Error) {
+      return new Response(e.message, { status: 500 });
+    }
   } finally {
-    // Ensures that the client will close when you finish/error
-    await mongoClient.close();
+    client.close();
   }
 }
