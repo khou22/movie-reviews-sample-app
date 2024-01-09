@@ -28,23 +28,7 @@ export async function POST(req: NextRequest) {
     createdAt: new Date(),
   };
 
-  const client = new MongoClient(uri);
-
-  // Connect to MongoDB and insert a new document.
-  try {
-    await client.connect();
-    const database = client.db(mongoDbId);
-    const collection = database.collection(mongoDbCollectionId);
-    await collection.insertOne(movieRecord);
-    return new Response(JSON.stringify(movieRecord), { status: 200 });
-  } catch (e) {
-    console.error(e);
-    if (e instanceof Error) {
-      return new Response(e.message, { status: 500 });
-    }
-  } finally {
-    client.close();
-  }
+  return new Response("Unimplemented", { status: 501 });
 }
 
 export type GetMoviesResponse = {
@@ -52,36 +36,5 @@ export type GetMoviesResponse = {
 };
 
 export async function GET(_req: NextRequest) {
-  const client = new MongoClient(uri);
-
-  try {
-    // Read all movie reviews from my collection.
-    await client.connect();
-    const database = client.db(mongoDbId);
-    const collection = database.collection(mongoDbCollectionId);
-    const movieRecords = await collection.find({}).toArray();
-
-    const movies = movieRecords.map((movieRecord) => {
-      return {
-        id: movieRecord.id,
-        title: movieRecord.title,
-        review: movieRecord.review,
-        rating: movieRecord.rating,
-        imageUrl: movieRecord.imageUrl,
-        createdAt: movieRecord.createdAt,
-      };
-    });
-    const response: GetMoviesResponse = {
-      reviews: movies,
-    };
-
-    return new Response(JSON.stringify(response), { status: 200 });
-  } catch (e) {
-    console.error(e);
-    if (e instanceof Error) {
-      return new Response(e.message, { status: 500 });
-    }
-  } finally {
-    client.close();
-  }
+  return new Response("Unimplemented", { status: 501 });
 }
